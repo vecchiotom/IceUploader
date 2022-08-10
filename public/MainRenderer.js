@@ -8,6 +8,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var config = {
+  name: "IceHax's File Uploader"
+};
+
 var Navbar = function (_React$Component) {
   _inherits(Navbar, _React$Component);
 
@@ -70,7 +74,7 @@ var Navbar = function (_React$Component) {
             React.createElement(
               "a",
               { "class": "nav-link", href: "#" },
-              "Planner ",
+              "Contact Me ",
               this.state.selected == 1 && React.createElement(
                 "span",
                 { "class": "sr-only" },
@@ -78,22 +82,7 @@ var Navbar = function (_React$Component) {
               )
             )
           ),
-          React.createElement(
-            "li",
-            { "class": this.state.selected == 2 ? "nav-item active" : "nav-item", onClick: function onClick() {
-                return _this2.setState({ selected: 2 });
-              } },
-            React.createElement(
-              "a",
-              { "class": "nav-link", href: "#" },
-              "Contacts ",
-              this.state.selected == 2 && React.createElement(
-                "span",
-                { "class": "sr-only" },
-                "current"
-              )
-            )
-          )
+          "        "
         )
       );
     }
@@ -102,21 +91,127 @@ var Navbar = function (_React$Component) {
   return Navbar;
 }(React.Component);
 
-/* class Content extends React.Component {
-  constructor(props){
-    super(props)
-  }
-  render() {
-    return (
-      <div>
-        gay
-      </div>
-    )
-  }
-} */
+var Uploader = function (_React$Component2) {
+  _inherits(Uploader, _React$Component2);
 
+  function Uploader(props) {
+    _classCallCheck(this, Uploader);
+
+    var _this3 = _possibleConstructorReturn(this, (Uploader.__proto__ || Object.getPrototypeOf(Uploader)).call(this, props));
+
+    _this3.state = {
+      uploaded: false,
+      uploading: false
+    };
+    return _this3;
+  }
+
+  _createClass(Uploader, [{
+    key: "click",
+    value: function click(e) {
+      e.preventDefault();
+      $.ajax({
+        // Your server script to process the upload
+        url: 'upload',
+        type: 'POST',
+
+        // Form data
+        data: new FormData($('form')[0]),
+
+        // Tell jQuery not to process data or worry about content-type
+        // You *must* include these options!
+        cache: false,
+        contentType: false,
+        processData: false,
+
+        // Custom XMLHttpRequest
+        xhr: function xhr() {
+          var myXhr = $.ajaxSettings.xhr();
+          if (myXhr.upload) {
+            // For handling the progress of the upload
+            myXhr.upload.addEventListener('progress', function (e) {
+              if (e.lengthComputable) {
+                $('progress').attr({
+                  value: e.loaded,
+                  max: e.total
+                });
+              }
+            }, false);
+          }
+          return myXhr;
+        }
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+
+      if (this.state.uploading) return React.createElement("div", { "class": this.props.class, id: this.props.id });else if (this.state.uploaded) return React.createElement("div", { "class": this.props.class, id: this.props.id });else return React.createElement(
+        "div",
+        { "class": this.props.class, id: this.props.id },
+        React.createElement(
+          "form",
+          { id: "file" },
+          React.createElement(
+            "div",
+            { "class": "form-group row" },
+            React.createElement(
+              "label",
+              { "for": "filename", "class": "col-4 col-form-label" },
+              "File Name (optional)"
+            ),
+            React.createElement(
+              "div",
+              { "class": "col-8" },
+              React.createElement(
+                "div",
+                { "class": "input-group" },
+                React.createElement("input", { id: "filename", name: "filename", type: "text", "class": "form-control" })
+              ),
+              React.createElement("br", null),
+              React.createElement(
+                "div",
+                { "class": "mb-3" },
+                React.createElement("input", { "class": "form-control", name: "file", type: "file", id: "formFile" })
+              )
+            )
+          ),
+          React.createElement(
+            "div",
+            { "class": "form-group row" },
+            React.createElement(
+              "div",
+              { "class": "offset-4 col-8" },
+              React.createElement(
+                "button",
+                { name: "submit", type: "submit", "class": "btn btn-primary", onClick: function onClick(e) {
+                    return _this4.click(e);
+                  } },
+                "Upload"
+              )
+            )
+          ),
+          React.createElement("progress", { id: "progress" })
+        )
+      );
+    }
+  }]);
+
+  return Uploader;
+}(React.Component);
 
 var domContainer = document.querySelector('#content');
 var root = ReactDOM.createRoot(domContainer);
 
-root.render(React.createElement(Navbar, { name: "IceHax's Motorcycle Trip-Planner" }));
+root.render(React.createElement(
+  "div",
+  null,
+  React.createElement(Navbar, { name: config.name }),
+  React.createElement(
+    "h1",
+    { "class": "center-vert" },
+    "Upload Files"
+  ),
+  React.createElement(Uploader, { id: "uploader", "class": "center rounded-border" })
+));
