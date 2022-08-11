@@ -101,7 +101,7 @@ var Uploader = function (_React$Component2) {
 
     _this3.state = {
       uploaded: false,
-      uploading: false
+      link: ""
     };
     return _this3;
   }
@@ -109,6 +109,8 @@ var Uploader = function (_React$Component2) {
   _createClass(Uploader, [{
     key: "click",
     value: function click(e) {
+      var _this4 = this;
+
       e.preventDefault();
       $.ajax({
         // Your server script to process the upload
@@ -139,15 +141,38 @@ var Uploader = function (_React$Component2) {
             }, false);
           }
           return myXhr;
+        },
+        success: function success(data) {
+          _this4.setState({ uploaded: true, link: data.link });
         }
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
-      if (this.state.uploading) return React.createElement("div", { "class": this.props.class, id: this.props.id });else if (this.state.uploaded) return React.createElement("div", { "class": this.props.class, id: this.props.id });else return React.createElement(
+      if (this.state.uploaded) return React.createElement(
+        "div",
+        { "class": this.props.class, id: this.props.id },
+        React.createElement(
+          "h2",
+          { style: { color: 'green', textAlign: "center", marginTop: "10%" } },
+          "Uploaded!"
+        ),
+        " ",
+        React.createElement("br", null),
+        React.createElement(
+          "p",
+          { style: { textAlign: "center", fontSize: "200%" } },
+          "Find your file at ",
+          React.createElement(
+            "a",
+            { href: this.state.link },
+            "this link"
+          )
+        )
+      );else return React.createElement(
         "div",
         { "class": this.props.class, id: this.props.id },
         React.createElement(
@@ -186,7 +211,7 @@ var Uploader = function (_React$Component2) {
               React.createElement(
                 "button",
                 { name: "submit", type: "submit", "class": "btn btn-primary", onClick: function onClick(e) {
-                    return _this4.click(e);
+                    return _this5.click(e);
                   } },
                 "Upload"
               )

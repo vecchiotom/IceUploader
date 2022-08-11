@@ -43,7 +43,7 @@ class Uploader extends React.Component {
     super(props)
     this.state = {
       uploaded: false,
-      uploading: false
+      link: ""
     }
   }
   click(e) {
@@ -63,7 +63,7 @@ class Uploader extends React.Component {
       processData: false,
 
       // Custom XMLHttpRequest
-      xhr: function () {
+      xhr: () => {
         var myXhr = $.ajaxSettings.xhr();
         if (myXhr.upload) {
           // For handling the progress of the upload
@@ -77,20 +77,20 @@ class Uploader extends React.Component {
           }, false);
         }
         return myXhr;
+      },
+      success: (data)=>{
+        this.setState({uploaded:true, link:data.link})
       }
     });
   }
   render() {
-    if (this.state.uploading)
+    if (this.state.uploaded)
       return (
         <div class={this.props.class} id={this.props.id}>
-
-        </div>
-      );
-    else if (this.state.uploaded)
-      return (
-        <div class={this.props.class} id={this.props.id}>
-
+          <h2 style={{color:'green', textAlign:"center", marginTop:"10%"}}>Uploaded!</h2> <br></br>
+          <p style={{textAlign:"center", fontSize:"200%"}}>
+            Find your file at <a href={this.state.link}>this link</a>
+          </p>
         </div>
       );
     else
